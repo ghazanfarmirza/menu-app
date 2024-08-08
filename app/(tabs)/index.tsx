@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Button,
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -285,9 +284,9 @@ const HomeScreen = ({ navigation }: any): any => {
   };
 
   const filteredMenuItems = menuItems.filter(
-    (item) =>
-      (selectedCategory ? item.category === selectedCategory : true) &&
-      (filter === "All" ? true : item?.filter && item.filter.includes(filter))
+      (item) =>
+        (selectedCategory ? item.category === selectedCategory : true) &&
+        (filter === "All" ? true : Array.isArray(item.category) && item.category.includes(filter))
   );
 
   const handleMenuItemPress = (item: any) => {
@@ -311,18 +310,21 @@ const HomeScreen = ({ navigation }: any): any => {
             style={styles.button}
             onPress={() => setFilter("Dine-In")}
           >
+            <Ionicons name="restaurant" size={16} color="white" />
             <Text style={styles.buttonText}>Dine-In</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => setFilter("Takeaway")}
           >
+            <Ionicons name="cart" size={16} color="white" />
             <Text style={styles.buttonText}>Takeaway</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => setFilter("Drive-thru")}
           >
+            <Ionicons name="car" size={16} color="white" />
             <Text style={styles.buttonText}>Drive-thru</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -356,8 +358,11 @@ const HomeScreen = ({ navigation }: any): any => {
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
         />
-        <TouchableOpacity style={styles.button} onPress={resetCategoryFilter}>
-          <Text style={styles.buttonText}>Reset Categories</Text>
+        <TouchableOpacity
+          style={styles.resetButton}
+          onPress={resetCategoryFilter}
+        >
+          <Text style={styles.resetButtonText}>Reset Categories</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.menuItems}>
@@ -451,7 +456,7 @@ const styles = StyleSheet.create({
   },
   filterButtons: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
   },
   categories: {
     marginBottom: 16,
@@ -474,21 +479,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#ff8d2f",
     padding: 10,
     borderRadius: 5,
-    alignItems: "center",
-    margin: 10,
+    // alignItems: "center",
+    margin: 5,
+    flexDirection: "row",
   },
   buttonText: {
     color: "white",
     fontWeight: "bold",
+    // marginLeft: 5,
   },
   resetButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
     backgroundColor: "#e0e0e0",
-    marginRight: 8,
+    padding: 10,
+    borderRadius: 5,
     alignItems: "center",
-    elevation: 3,
+    margin: 10,
+  },
+  resetButtonText: {
+    color: "black",
+    fontWeight: "bold",
   },
   selectedCategoryItem: {
     backgroundColor: "#d1d1d1",
@@ -509,7 +518,6 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: "column",
     backgroundColor: "#fff",
-    padding: 16,
     borderRadius: 8,
     marginBottom: 16,
     elevation: 1,
@@ -527,6 +535,7 @@ const styles = StyleSheet.create({
   menuItemDetails: {
     flex: 1,
     justifyContent: "flex-start",
+    padding: 16,
   },
   menuItemHeader: {
     flexDirection: "row",
@@ -553,11 +562,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   itemFilter: {
-    backgroundColor: "#e0e0e0",
-    padding: 4,
-    borderRadius: 4,
-    marginRight: 8,
-    fontSize: 12,
+      // backgroundColor: "#e0e0e0",
+      borderColor: "blue",
+      borderWidth: 1,
+      fontWeight: "bold",
+      padding: 4,
+      borderRadius: 4,
+      marginRight: 8,
+      fontSize: 12,
   },
   bottomModal: {
     justifyContent: "flex-end",
